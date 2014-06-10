@@ -1,7 +1,7 @@
 /*
 	Problem Definition:- Simple version controlling
 
-	Author:-	
+	Author:-
 		BYTErians Group;
 		Group no. 28
 
@@ -18,12 +18,12 @@
 
 	Idea:-
 
-	
+
 			Here we are not using multiple files, each one for all different versions.
 		It would have contained un-necessary multiple copies of same data.
 
-			We take the advantage of the fact that difference between two versions will always be 
-		the only one operation. So we are keeping track of difference between previous version and 
+			We take the advantage of the fact that difference between two versions will always be
+		the only one operation. So we are keeping track of difference between previous version and
 		current version only.
 
 			For that, we have maintained an extra metadata file and in that file we insert the required
@@ -33,13 +33,13 @@
 	Data Structure:-
 
 
-			As we are not maintaining the separate files for each version, we need to make use of 
+			As we are not maintaining the separate files for each version, we need to make use of
 		our extra metadata file. And using that file we are building the content of corresponding version
 		as and when query is asked.
 
 			for that we need insertion and deletion operations most of the times and hence we use
 		Linked List data structure.
-		
+
 */
 
 #include<iostream>
@@ -78,7 +78,7 @@ void build(list &file)
 			operation: 0 if deletion
 					    1 if appending
 		*/
-		
+
 		char data[12];	// gets data which is appended
 
 		int line_no;		// gets line no. which is deleted
@@ -113,15 +113,39 @@ void build(list &file, char filename[])
 	//open file main
 	fstream main;
 	main.open(filename, ios::in);
-
+    int count=0;
 							//cout<<filename<<endl;
 	char data[12];
+	strcpy(data, "");
 	main>>data;
+	if(strlen(data)>9)
+    {
+        cout<<"\nCharacter width exceeded";
+        exit(0);
+    }
+    count++;                        //cout<<data<<endl;
 	while(!main.eof())
 	{
+
 		file.insert(data);
 							//cout<<data<<endl;
+		strcpy(data, "");
 		main>>data;
+        count++;
+		if(strlen(data)>9)
+        {
+        cout<<"Character width exceeded";
+        exit(0);
+        }
+	}
+	if(count>20)
+    {
+        cout<<"\nTotal number of lines should be 20";
+        exit(0);
+    }
+	if(strcmp(data, "")){
+		//cout<<data<<endl;
+		file.insert(data);
 	}
 							//cout<<"out"<<endl;
 	main.close();
@@ -181,8 +205,8 @@ void update_metadata(char filename[])
 	ofstream metadata;
 
 	list meta, main;
-	build(meta);			//previous version 
-	build(main, filename);	//current version	
+	build(meta);			//previous version
+	build(main, filename);	//current version
 
 										//cout<<"Meta linked list:"<<endl;
 										//meta.display();
@@ -195,8 +219,8 @@ void update_metadata(char filename[])
 		if newer version is smaller than previous version; then deletion operation is performed.
 		if newer version is larger than previous version; then appending operation is performed.
 
-		and for un-necessary commit operation checking, 
-		if both version are of same size, then no changes are made to previous version and we 
+		and for un-necessary commit operation checking,
+		if both version are of same size, then no changes are made to previous version and we
 		avoid creating an un-necessary new version.
 	*/
 	if(main.count() < meta.count())				//newer < previous
@@ -229,7 +253,7 @@ void display_version(char ver_num[])
 
 int main(int argc, char *argv[])
 {
-	//	only 1 argument to 'svc' is allowed; hence other options should be prohibited 
+	//	only 1 argument to 'svc' is allowed; hence other options should be prohibited
 	if(argc!=2)
 	{
 		cout<<"Syntax of command is incorrect!"<<endl;
